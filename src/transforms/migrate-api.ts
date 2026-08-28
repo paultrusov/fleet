@@ -25,8 +25,6 @@ export const migrateApi: Transform = {
     let imports = 0;
 
     for (const file of project.getSourceFiles()) {
-      let touched = false;
-
       file.forEachDescendant((node) => {
         if (!Node.isCallExpression(node)) return;
         const callee = node.getExpression();
@@ -37,19 +35,17 @@ export const migrateApi: Transform = {
         const fields = callArgs.map((a, i) => `${params[i]}: ${a.getText()}`).join(", ");
         node.replaceWithText(`${to}({ ${fields} })`);
         calls++;
-        touched = true;
       });
 
+      // Deliberately no formatText() here: it reindents the whole file, and a codemod
+      // PR that also reformats 200 lines it did not change is a PR nobody reviews.
       for (const decl of file.getImportDeclarations()) {
         for (const spec of decl.getNamedImports()) {
           if (spec.getName() !== fn) continue;
           spec.setName(to);
           imports++;
-          touched = true;
         }
       }
-
-      void touched; // no formatText(): a codemod PR should not reindent files it did not change
     }
 
     if (calls === 0 && imports === 0) return { changed: false, summary: `no calls to ${fn}` };
