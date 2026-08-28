@@ -1,0 +1,8 @@
+{
+  "provider": "local",
+  "localRoot": "./fleet-remotes",
+  "githubOwner": "paultrusov",
+  "concurrency": 16,
+  "stateDir": "./.fleet",
+  "branchPrefix": "fleet"
+}

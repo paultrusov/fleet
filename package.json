@@ -1,0 +1,25 @@
+{
+  "name": "fleet",
+  "version": "1.0.0",
+  "description": "Apply a code change across a fleet of repositories safely: propose, verify, roll out, roll back.",
+  "type": "module",
+  "bin": {
+    "fleet": "./src/cli.ts"
+  },
+  "scripts": {
+    "fleet": "node src/cli.ts",
+    "make-fleet": "node scripts/make-fleet.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/test.ts"
+  },
+  "dependencies": {
+    "ts-morph": "^24.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}
