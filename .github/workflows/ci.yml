@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # 22.6 is the floor for running TypeScript without a build step; 24 does it
+          # without a flag and ships node:sqlite, which is the whole dependency budget.
+          node-version: "24"
+      - run: npm ci
+      - run: npx tsc --noEmit
+      # The self-test generates a real fleet of git repos and runs the engine over it:
+      # transforms, CI gating, quarantine, resume and revert.
+      - run: |
+          git config --global user.email "ci@localhost"
+          git config --global user.name "ci"
+          npm test
